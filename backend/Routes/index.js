@@ -2,11 +2,11 @@
 
 const express = require('express') ; 
 const userRouter = require('./user');
-const app = express() ; 
 
-const route = express.Router() ;  
+const router = express.Router() ; 
 
-route.use("/user",userRouter)
+
+route.use("/user",userRouter)  ;
 module.exports = {
-  route 
+  router
 }
