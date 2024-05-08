@@ -6,7 +6,7 @@ const userRouter = require('./user');
 const router = express.Router() ; 
 
 
-route.use("/user",userRouter)  ;
+router.use("/user",userRouter)  ;
 module.exports = {
   router
-}
+} 
