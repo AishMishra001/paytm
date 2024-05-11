@@ -48,8 +48,9 @@ const token = jwt.sign({
   userId
 },JWT_SECRET)
 
-res.status(201).json({
-  
+res.json({
+  message: "User created successfully",
+  token: token ,
 })
 
 });

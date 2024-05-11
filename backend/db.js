@@ -28,7 +28,6 @@ const paytmSchema = new mongoose.Schema({
   }
 
 } )
-
 const User = mongoose.model( "User" , paytmSchema )
 
 module.exports = {
