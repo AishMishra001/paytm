@@ -1,35 +1,25 @@
 const mongoose = require("mongoose")
+const { Schema } = require("zod")
 // mongodb+srv://aishlunatic001:ram123@@cluster0.bdn15bk.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0
 
 mongoose.connect("mongodb+srv://aishlunatic001:ram123@@cluster0.bdn15bk.mongodb.net/?Paytm")
 
-const paytmSchema = new mongoose.Schema({
+const PaytmSchema =  new Schema({
   username : {
-    type : String , 
-    required : true , 
-    unique : true ,
-    trim : true , 
-    lowercase : true ,
-    maxLength : 20  
-  } , 
-  email : {
+    type : String ,
     required : true , 
     unique : true , 
-    type : String , 
-    lowercase : true ,
-    minLength : 3 , 
-    maxLength : 30 
-  } , 
-  password : {
-    required : true , 
-    type : String ,
-    unique : true ,
-    minLength : 6  
-  }
+    minlength : 7 ,
+    maxlength : 20 , 
+    trim : true 
+  }, 
+  firstname : String , 
+  lastname : String ,
+  password : String , 
+})
 
-} )
-const User = mongoose.model( "User" , paytmSchema )
+const User = mongoose.model( 'User' , PaytmSchema) ; 
 
 module.exports = {
-  User 
-} 
+   User 
+}
