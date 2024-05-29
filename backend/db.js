@@ -13,9 +13,24 @@ const PaytmSchema =  new Schema({
     maxlength : 20 , 
     trim : true 
   }, 
-  firstname : String , 
-  lastname : String ,
-  password : String , 
+  firstname : {
+    type : String ,
+    required : true ,
+    maxlength : 10 ,
+    trim : true , 
+  }, 
+  lastname : {
+    type : String , 
+    required : true , 
+    maxlength : 10 , 
+    trim : true ,
+  } ,
+  password : {
+    type : String ,
+    required : true ,
+    minlength : 8 ,
+    maxlength : 20 ,
+  } , 
 })
 
 const User = mongoose.model( 'User' , PaytmSchema) ; 
