@@ -1,13 +1,13 @@
 const express = require("express")
 
 const cors = require("cors")   ; 
-const bodyParser = require("body-parser") ; 
-const mainRouter = require('../backend/Routes/index');
-const bodyParser = require("body-parser");
-
-
 app.use(cors())  ; 
 app.use(bodyParser) ; 
+
+const bodyParser = require("body-parser");
+const mainRouter = require('../backend/Routes/index');
+
+
 
 const app = express() ; 
 app.use("api/v1",mainRouter) ; 
