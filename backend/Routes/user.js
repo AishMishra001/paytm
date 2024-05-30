@@ -5,6 +5,8 @@ const { User } = require('../db');
 const { JWT_SECRET } = require('../config');
 const jwt = require('jsonwebtoken') ; 
 const { read } = require('graceful-fs');
+const { authMiddleware } = require('../middleware');
+const { updateLocale } = require('yargs');
 
 
 // Creating schema 
@@ -15,6 +17,8 @@ signUpSchema = mongoose.Schema({
   firstname : zod.string() , 
   lastname : zod.string() ,
 })
+
+// SIGNUP ROUTER : 
 UserRouter.post('/signup', async (req,res)=>{
 
   // checking validity with safeParse 
@@ -66,6 +70,8 @@ UserRouter.post('/signup', async (req,res)=>{
         })
 })
 
+// SIGNIN ROUTER : 
+
 const signUpSchema = mongoose.Schema({
   username : zod.string(),
   password : zod.string(),
@@ -99,3 +105,92 @@ UserRouter.post('/signin', async (req,res)=>{
         message : 'Error while logging in'
       })
 })
+
+
+// UPDATE INFORMATION ROUTER 
+
+
+const UpdateSchema = {
+  password : zod.string() , 
+  firstname : zod.string() , 
+  lastname : zod.string() 
+}
+UserRouter.put('/user' , authMiddleware ,  async(req,res)=>{
+    const validData = UpdateSchema.safeParse(req.body) 
+
+    if(!validData.success){
+      res.status(404).json({
+        message : 'Incorrect Input'
+      })
+    }
+
+    try{
+      const user = await User.findById(req.userId);
+      if (!user) {
+          return res.status(404).json({
+              message: "User not found",
+          });
+      }
+
+      await User.updateOne({ _id: req.userId }, req.body);
+
+      res.json({
+          message: "Updated successfully",
+      });
+  } catch(error){
+      res.status(500).json({
+          message: "Internal server error",
+          error: error.message,
+      });
+  }
+  try {
+    const user = await User.findById(req.userId);
+    if (!user) {
+        return res.status(404).json({
+            message: "User not found",
+        });
+    }
+
+    await User.updateOne({ _id: req.userId }, req.body);
+
+    res.json({
+        message: "Updated successfully",
+    });
+} catch (error) {
+    res.status(500).json({
+        message: "Internal server error",
+        error: error.message,
+    });
+}
+})
+
+
+// ROUTER TO FILTER USER FORM BACKEND 
+
+UserRouter.get('/user/bulk' , async (req , res)=>{
+  const filter = req.params.filter || ""  
+
+const users = await User.find({
+
+  $or : [{
+    firstname : {
+      $regex : filter ,
+    } , 
+    lastname : {
+      $regex : filter ,
+    }
+  }]
+})
+res.json({
+  user : users.map( user=>({
+    username : user.username ,
+    firstname : user.firstname , 
+    lastname : user.lastname , 
+    _id : user._id 
+}))
+})
+}) 
+
+// This performs a MongoDB query to find users whose firstName or lastName matches the filter string.
+// The $or operator is used to match documents that satisfy either condition.
+// The $regex operator creates a regular expression from the filter string to perform a pattern match.
