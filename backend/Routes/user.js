@@ -9,7 +9,7 @@ const { authMiddleware } = require('../middleware');
 
 // Creating schema 
 
-signUpSchema = mongoose.Schema({
+signUpSchema = zod.object({
   username: zod.string().email() , 
   password: zod.string(), 
   firstname : zod.string() , 
@@ -33,7 +33,7 @@ UserRouter.post('/signup', async (req,res)=>{
     // After checking the validity ..... if the data is valid check if the user already existing the database 
 
     const excitingUser = await User.findOne({
-      username : body.username  
+      username : req.body.username  
     })
 
    
@@ -74,15 +74,14 @@ UserRouter.post('/signup', async (req,res)=>{
 
         res.json({
           message : "User successfully created " , 
-          token : token , 
-          balance : Math.random()*100000 
+          token : token ,
         })
 })
 
 // SIGNIN ROUTER : 
 
-const signUpSchema = mongoose.Schema({
-  username : zod.string(),
+const signUpSchema = zod.object({
+  username : zod.string().email(),
   password : zod.string(),
 })
 UserRouter.post('/signin', async (req,res)=>{
@@ -108,6 +107,7 @@ UserRouter.post('/signin', async (req,res)=>{
           res.json({
              token : token 
           })
+          return ; 
       }
 
       res.status(411).json({
@@ -119,11 +119,12 @@ UserRouter.post('/signin', async (req,res)=>{
 // UPDATE INFORMATION ROUTER 
 
 
-const UpdateSchema = {
-  password : zod.string() , 
-  firstname : zod.string() , 
-  lastname : zod.string() 
-}
+const UpdateSchema = zod.object({
+  password : zod.string().optional() , 
+  firstname : zod.string().optional() , 
+  lastname : zod.string().optional() 
+})
+
 UserRouter.put('/user' , authMiddleware ,  async(req,res)=>{
     const validData = UpdateSchema.safeParse(req.body) 
 
@@ -176,7 +177,7 @@ UserRouter.put('/user' , authMiddleware ,  async(req,res)=>{
 
 // ROUTER TO FILTER USER FORM BACKEND 
 
-UserRouter.get('/user/bulk' , async (req , res)=>{
+UserRouter.get('/user/bulk' , authMiddleware ,  async (req , res)=>{
   const filter = req.params.filter || ""  
 
 const users = await User.find({

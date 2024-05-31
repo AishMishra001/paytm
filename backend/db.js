@@ -4,7 +4,7 @@ const { Schema } = require("zod")
 
 mongoose.connect("mongodb+srv://aishlunatic001:ram123@@cluster0.bdn15bk.mongodb.net/?Paytm")
 
-const PaytmSchema =  new Schema({
+const userSchema =  new Schema({
   username : {
     type : String ,
     required : true , 
@@ -45,10 +45,10 @@ const accountSchema = new Schema({
   }
 })
 
+const User = mongoose.model( 'User' , userSchema) ; 
 const Account = mongoose.model('Account', accountSchema ) ; 
-const User = mongoose.model( 'User' , PaytmSchema) ; 
 
 module.exports = {
    User , 
-   Account
+   Account 
 }
