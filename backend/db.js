@@ -33,8 +33,22 @@ const PaytmSchema =  new Schema({
   } , 
 })
 
+const accountSchema = new Schema({
+  userId : {
+    type : mongoose.Schema.Types.ObjectId ,
+    ref : 'User' , 
+    required : true ,   
+  } , 
+  balance : {
+    required : true , 
+    type : Number , 
+  }
+})
+
+const Account = mongoose.model('Account', accountSchema ) ; 
 const User = mongoose.model( 'User' , PaytmSchema) ; 
 
 module.exports = {
-   User 
+   User , 
+   Account
 }
