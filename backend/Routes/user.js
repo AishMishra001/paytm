@@ -1,206 +1,156 @@
-const express = require('express') ; 
-const UserRouter = express.Router() ;
-const zod = require('zod');  
-const { User, Account } = require('../db');
-const { JWT_SECRET } = require('../config');
-const jwt = require('jsonwebtoken') ; 
-const { authMiddleware } = require('../middleware');
+// backend/routes/user.js
+const express = require('express');
 
+const UserRouter = express.Router();
+const zod = require("zod");
+const { User, Account } = require("../db");
+const jwt = require("jsonwebtoken");
+const { JWT_SECRET } = require("../config");
+const  { authMiddleware } = require("../middleware");
 
-// Creating schema 
-
-signUpSchema = zod.object({
-  username: zod.string().email() , 
-  password: zod.string(), 
-  firstname : zod.string() , 
-  lastname : zod.string() ,
+const signupBody = zod.object({
+  username: zod.string().email(),
+	firstname: zod.string(),
+	lastname: zod.string(),
+	password: zod.string()
 })
 
-// SIGNUP ROUTER : 
-UserRouter.post('/signup', async (req,res)=>{
-
-  // checking validity with safeParse 
-    const ValidData = signUpSchema.safeParse(req.body) ; 
-
-  // if Input data is not valid send a status code of 400 and message of incorrect user 
-    
-    if(!ValidData.success){
-      res.status(400).json({
-        message : 'Incorrect inputs'
-      }) ;
-    }
-
-    // After checking the validity ..... if the data is valid check if the user already existing the database 
-
-    const excitingUser = await User.findOne({
-      username : req.body.username  
-    })
-
-   
-
-    if(excitingUser){
-      res.status(400).json({
-        message : 'User already exists'
-      })
-    }
-
-    // Now create the new user in the database 
-
-       const user = await User.create({
-          username : req.body.username , 
-          firstname : req.body.firstname ,
-          lastname : req.body.lastname , 
-          password : req.body.password 
-       }) 
-
-       const userId = user._id ; 
-
-       // creating a acccount of the user and give him some dummy balance 
-
-       await Account.create({
-         userId : userId , 
-         balance : 1 + Math.random()*10000 
-       })
-
-
-
-
-
-       // response with a new jwt token after creating a new user 
-
-       const token = jwt.sign({
-         userId 
-        }, JWT_SECRET) ; 
-
-        res.json({
-          message : "User successfully created " , 
-          token : token ,
-        })
-})
-
-// SIGNIN ROUTER : 
-
-const signUpSchema = zod.object({
-  username : zod.string().email(),
-  password : zod.string(),
-})
-UserRouter.post('/signin', async (req,res)=>{
-      const validUser = signUpSchema.safeParse(req.body) ; 
-
-      if(!validUser.success){
-        res.status(411).json({
-          message : 'Incorrect Inputs'
-        })
+UserRouter.post("/signup", async (req, res) => {
+    try {
+      // Validate the request body
+      const parsedData = signupBody.safeParse(req.body);
+      if (!parsedData.success) {
+        return res.status(400).json({
+          message: "Validation failed",
+          errors: parsedData.error.errors
+        });
       }
-
-      const existingUser = User.findOne({
-        username : req.body.username , 
-        password : req.body.password 
-      })
-
-      if(existingUser){
-        
-          const token = jwt.sign({
-            userId : existingUser._id 
-          }, JWT_SECRET ) ; 
-        
-          res.json({
-             token : token 
-          })
-          return ; 
+  
+      // Check if the user already exists
+      const existingUser = await User.findOne({ username: req.body.username });
+      if (existingUser) {
+        return res.status(400).json({
+          message: "Email already taken"
+        });
       }
-
-      res.status(411).json({
-        message : 'Error while logging in'
-      })
-})
-
-
-// UPDATE INFORMATION ROUTER 
-
-
-const UpdateSchema = zod.object({
-  password : zod.string().optional() , 
-  firstname : zod.string().optional() , 
-  lastname : zod.string().optional() 
-})
-
-UserRouter.put('/user' , authMiddleware ,  async(req,res)=>{
-    const validData = UpdateSchema.safeParse(req.body) 
-
-    if(!validData.success){
-      res.status(404).json({
-        message : 'Incorrect Input'
-      })
-    }
-
-    try{
-      const user = await User.findById(req.userId);
-      if (!user) {
-          return res.status(404).json({
-              message: "User not found",
-          });
-      }
-
-      await User.updateOne({ _id: req.userId }, req.body);
-
-      res.json({
-          message: "Updated successfully",
+  
+      // Create the new user
+      const user = await User.create({
+        username: req.body.username,
+        password: req.body.password,
+        firstname: req.body.firstname,
+        lastname: req.body.lastname,
       });
-  } catch(error){
+  
+      // Create an account for the user
+      const userId = user._id;
+      await Account.create({
+        userId,
+        balance: 1 + Math.random()*10000
+      });
+  
+      // Generate a JWT token for the user
+      const token = jwt.sign({ userId }, JWT_SECRET);
+  
+      // Send the success response
+      res.json({
+        message: "User created successfully",
+        token: token
+      });
+    } catch (e) {
+      // Log the specific error
+      console.error("Error during signup:", e);  // Log the detailed error
       res.status(500).json({
-          message: "Internal server error",
-          error: error.message,
+        message: "Something went wrong",
+        error: e.message  // Send back the error message for debugging
+      });
+    }
+  });
+  
+  
+  
+
+
+const signinBody = zod.object({
+  username: zod.string().email(),
+	password: zod.number() 
+})
+
+UserRouter.post("/signin", async (req, res) => {
+  const { success, error } = signinBody.safeParse(req.body);
+  if (!success) {
+      return res.status(400).json({
+          message: "Invalid input: " + error.errors.map(e => e.message).join(", ")
       });
   }
-  try {
-    const user = await User.findById(req.userId);
-    if (!user) {
-        return res.status(404).json({
-            message: "User not found",
-        });
+    const user = await User.findOne({
+        username: req.body.username,
+        password: req.body.password
+    });
+
+    if (user) {
+        const token = jwt.sign({
+            userId: user._id
+        }, JWT_SECRET);
+  
+        res.json({
+            token: token
+        })
+        return;
     }
 
-    await User.updateOne({ _id: req.userId }, req.body);
+    
+    res.status(411).json({
+        message: "Error while logging in"
+    })
+})
+
+const updateBody = zod.object({
+	password: zod.string().optional(),
+  firstname: zod.string().optional(),
+  lastname: zod.string().optional(),
+})
+
+UserRouter.put("/", authMiddleware, async (req, res) => {
+    const { success } = updateBody.safeParse(req.body)
+    if (!success) {
+        res.status(411).json({
+            message: "Error while updating information"
+        })
+    }
+
+    await User.updateOne(req.body, {
+        id: req.userId
+    })
 
     res.json({
-        message: "Updated successfully",
-    });
-} catch (error) {
-    res.status(500).json({
-        message: "Internal server error",
-        error: error.message,
-    });
-}
+        message: "Updated successfully"
+    })
 })
 
+UserRouter.get("/bulk", async (req, res) => {
+    const filter = req.query.filter || "";
 
-// ROUTER TO FILTER USER FORM BACKEND 
+    const users = await User.find({
+        $or: [{
+            firstname: {
+                "$regex": filter
+            }
+        }, {
+            lastname: {
+                "$regex": filter
+            }
+        }]
+    })
 
-UserRouter.get('/user/bulk' , authMiddleware ,  async (req , res)=>{
-  const filter = req.params.filter || ""  
-
-const users = await User.find({
-
-  $or : [{
-    firstname : {
-      $regex : filter ,
-    } , 
-    lastname : {
-      $regex : filter ,
-    }
-  }]
+    res.json({
+        user: users.map(user => ({
+            username: user.username,
+            firstname: user.firstname,
+            lastname: user.lastname,
+            _id: user._id
+        }))
+    })
 })
-res.json({
-  user : users.map( user=>({
-    username : user.username ,
-    firstname : user.firstname , 
-    lastname : user.lastname , 
-    _id : user._id 
-}))
-})
-}) 
 
-// This performs a MongoDB query to find users whose firstName or lastName matches the filter string.
-// The $or operator is used to match documents that satisfy either condition.
-// The $regex operator creates a regular expression from the filter string to perform a pattern match.
+module.exports = UserRouter;

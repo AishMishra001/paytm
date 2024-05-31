@@ -1,6 +1,6 @@
 const JWT_SECRET = 'Radha' 
 
 
-module.exports={
+module.exports ={
   JWT_SECRET
-  }  ; 
+  }  
