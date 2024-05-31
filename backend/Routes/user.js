@@ -1,12 +1,10 @@
 const express = require('express') ; 
 const UserRouter = express.Router() ;
 const zod = require('zod');  
-const { User } = require('../db');
+const { User, Account } = require('../db');
 const { JWT_SECRET } = require('../config');
 const jwt = require('jsonwebtoken') ; 
-const { read } = require('graceful-fs');
 const { authMiddleware } = require('../middleware');
-const { updateLocale } = require('yargs');
 
 
 // Creating schema 
@@ -57,6 +55,16 @@ UserRouter.post('/signup', async (req,res)=>{
 
        const userId = user._id ; 
 
+       // creating a acccount of the user and give him some dummy balance 
+
+       await Account.create({
+         userId : userId , 
+         balance : 1 + Math.random()*10000 
+       })
+
+
+
+
 
        // response with a new jwt token after creating a new user 
 
@@ -66,7 +74,8 @@ UserRouter.post('/signup', async (req,res)=>{
 
         res.json({
           message : "User successfully created " , 
-          token : token 
+          token : token , 
+          balance : Math.random()*100000 
         })
 })
 
