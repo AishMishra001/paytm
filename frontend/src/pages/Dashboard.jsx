@@ -7,7 +7,7 @@ function Dashboard() {
     <div className="text-black">
       <Appbar user={'Aish'} userImage={'A'}></Appbar>
       <Balance Balance={"$2000"}></Balance>
-      <UserSection User={'Harkirat Singh'} UserImage={"H"}></UserSection>
+      <UserSection></UserSection>
     </div>
   )
 }
