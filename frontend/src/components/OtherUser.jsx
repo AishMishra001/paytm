@@ -1,7 +1,8 @@
 import React from 'react'
+import { useNavigate } from 'react-router-dom';
 
 function OtherUser({User}) {
-
+   const navigate = useNavigate() ; 
     // Extracting individual properties from the User object
     const { lastname , firstname} = User;
 
@@ -15,7 +16,12 @@ function OtherUser({User}) {
           <div className='text-black font-bold text-xl'>{firstname} {lastname}</div>
         </div>
         <div>
-          <button className='bg-black text-white w-full py-4 px-8 mt-2 border-black rounded-lg text-md font-bold'>Send Money</button>
+          <button onClick={
+
+            (e)=>{
+              navigate("/send?id="+User._id+"&name="+User.firstname) ; 
+            }
+          } className='bg-black text-white w-full py-4 px-8 mt-2 border-black rounded-lg text-md font-bold'>Send Money</button>
         </div>
       </div>
   )
