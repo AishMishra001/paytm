@@ -32,7 +32,7 @@ export function Signin() {
 
   return (
     <div className="w-full h-screen flex items-center justify-center bg-gray-400">
-      <div className="rounded-lg flex flex-col p-6 h-[52%] w-[30%] space-y-4 bg-white shadow-xl">
+      <div className="rounded-lg flex flex-col p-6 h-auto w-[90%] sm:w-[70%] md:w-[50%] lg:w-[30%] space-y-4 bg-white shadow-xl">
         <Header label="Sign in" />
         <SubHeading label="Enter your credentials to access your account" />
         <InputBox
