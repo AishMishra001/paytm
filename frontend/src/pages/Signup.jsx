@@ -36,7 +36,7 @@ export function Signup() {
 
   return (
     <div className="w-screen h-screen flex items-center justify-center bg-gray-400">
-      <div className="rounded-lg flex flex-col items-center my-14 mx-10 sm:m-2 p-6 bg-white shadow-xl w-full max-w-lg  gap-0 sm:gap-4 h-[55%] sm:h-[70%]">
+      <div className="rounded-lg flex flex-col items-center my-14 mx-10 sm:m-2 p-6 bg-white shadow-xl w-full max-w-lg  gap-0 sm:gap-4 h-[62%] sm:h-[75%]">
         <Header label="Sign up" />
         <SubHeading label="Enter your information to create an account" />
         <InputBox onChange={(e) => setFirstname(e.target.value)} label="First Name" placeholder="Aish" type={'text'} />
