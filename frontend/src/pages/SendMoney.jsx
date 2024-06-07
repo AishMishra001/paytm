@@ -38,21 +38,19 @@ function SendMoney({ User, UserImage }) {
   };
 
   return (
-    <>
-      <div className="w-full h-screen flex items-center justify-center bg-gray-400">
-        <div className="rounded-lg flex flex-col p-6 h-[45%] w-[30%] space-y-4 gap-20 bg-white shadow-xl">
-          <Header label="Send Money" />
-          <div className="flex gap-2 flex-col">
-            <div className='flex items-center gap-2'>
-              <button className='bg-green-500 rounded-full py-2 px-4 text-2xl text-white font-bold'>{name[0].toUpperCase()}</button>
-              <div className='text-black font-bold text-3xl'>{name}</div>
-            </div>
-            <InputBox onChange={(e) => setAmount(e.target.value)} label="Amount (in Rs)" placeholder="Enter amount" type={'number'} />
-            <Button2 onClick={handleTransfer} label={loading ? "Processing..." : success ? "Success!" : "Initiate Transfer"} disabled={loading || success} />
+    <div className="w-full h-screen flex items-center justify-center bg-gray-400 p-4 sm:p-6 md:p-8 lg:p-10">
+      <div className="rounded-lg flex flex-col p-6 space-y-4 bg-white shadow-xl w-full sm:w-[80%] md:w-[60%] lg:w-[40%] xl:w-[30%]">
+        <Header label="Send Money" />
+        <div className="flex flex-col gap-4">
+          <div className='flex items-center gap-2'>
+            <button className='bg-green-500 rounded-full py-2 px-4 text-2xl text-white font-bold'>{name[0].toUpperCase()}</button>
+            <div className='text-black font-bold text-xl sm:text-2xl md:text-3xl'>{name}</div>
           </div>
+          <InputBox onChange={(e) => setAmount(e.target.value)} label="Amount (in Rs)" placeholder="Enter amount" type={'number'} />
+          <Button2 onClick={handleTransfer} label={loading ? "Processing..." : success ? "Success!" : "Initiate Transfer"} disabled={loading || success} />
         </div>
       </div>
-    </>
+    </div>
   );
 }
 

@@ -12,8 +12,8 @@ function OtherUser({User}) {
   return (
     <div className='flex justify-between items-center'>
         <div className='flex items-center gap-2'>
-          <button className='bg-gray-300 rounded-full py-2 px-4'>{UserInitial}</button>
-          <div className='text-black font-bold text-xl'>{firstname} {lastname}</div>
+          <button className='bg-gray-300 rounded-full py-2 px-4 hover:bg-black hover:text-white'>{UserInitial}</button>
+          <div className='text-black font-bold text-sm sm:text-xl'>{firstname} {lastname}</div>
         </div>
         <div>
           <button onClick={
@@ -21,7 +21,7 @@ function OtherUser({User}) {
             (e)=>{
               navigate("/send?id="+User._id+"&name="+User.firstname) ; 
             }
-          } className='bg-black hover:bg-green-600 text-white w-full py-4 px-8 mt-2 border-black rounded-lg text-md font-bold'>Send Money</button>
+          } className='bg-black hover:bg-green-600 text-white w-full py-2 sm:py-4 px-4 sm:px-8 mt-2 border-black rounded-lg   text-sm sm:text-md font-bold'>Send Money</button>
         </div>
       </div>
   )
