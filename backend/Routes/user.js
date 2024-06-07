@@ -73,7 +73,7 @@ UserRouter.post("/signup", async (req, res) => {
 
 const signinBody = zod.object({
   username: zod.string().email(),
-	password: zod.number() 
+	password: zod.string() 
 })
 
 UserRouter.post("/signin", async (req, res) => {
@@ -152,5 +152,20 @@ UserRouter.get("/bulk", async (req, res) => {
         }))
     })
 })
+
+
+UserRouter.get("/", authMiddleware, async (req, res) => {
+  try {
+    const user = await User.findById(req.userId).select('username firstname lastname');
+    if (!user) {
+      return res.status(404).json({ message: "User not found" });
+    }
+    res.json(user);
+  } catch (error) {
+    res.status(500).json({ message: "Something went wrong", error: error.message });
+  }
+});
+
+
 
 module.exports = UserRouter;

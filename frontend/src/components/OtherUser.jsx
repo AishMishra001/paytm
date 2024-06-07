@@ -21,7 +21,7 @@ function OtherUser({User}) {
             (e)=>{
               navigate("/send?id="+User._id+"&name="+User.firstname) ; 
             }
-          } className='bg-black text-white w-full py-4 px-8 mt-2 border-black rounded-lg text-md font-bold'>Send Money</button>
+          } className='bg-black hover:bg-green-600 text-white w-full py-4 px-8 mt-2 border-black rounded-lg text-md font-bold'>Send Money</button>
         </div>
       </div>
   )
