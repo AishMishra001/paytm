@@ -50,7 +50,7 @@ export function Signin() {
           label={loading ? <ClipLoader size={20} color={"#fff"} /> : "Sign in"}
           disabled={loading}
         />
-        <WarningBottom label="Don't have an account?" buttonText="Sign up" to="/signup" />
+        <WarningBottom label="Don't have an account?" buttonText="Sign up" to="/" />
       </div>
     </div>
   );
