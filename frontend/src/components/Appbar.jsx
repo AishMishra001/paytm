@@ -7,7 +7,7 @@ import Profile from '../pages/Profile';
 
 function Appbar({ user }) {
   const displayUser = user || 'User';
-  const navigate = useNavigate() ; 
+  let navigate = useNavigate() ; 
 
   return (
     <div className='flex py-4 px-8 justify-between shadow items-center'>
