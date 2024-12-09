@@ -10,8 +10,12 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "express": "^4.18.2",
+    "cors": "^2.8.5",
+    "express": "^4.21.2",
+    "i": "^0.3.7",
+    "jsonwebtoken": "^9.0.2",
     "mongoose": "^8.1.0",
-    "zod": "^3.22.4"
+    "npm": "^10.9.2",
+    "zod": "^3.23.8"
   }
 }
