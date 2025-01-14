@@ -21,8 +21,8 @@ UserRouter.post("/signup", async (req, res) => {
       const parsedData = signupBody.safeParse(req.body);
       if (!parsedData.success) {
         return res.status(400).json({
-          message: "Validation failed",
-          errors: parsedData.error.errors
+          message: "Validation failed", 
+          errors: parsedData.error.errors , 
         });
       }
   

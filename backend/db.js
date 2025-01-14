@@ -1,8 +1,8 @@
 const mongoose = require("mongoose")
-//mongodb+srv://aishlunatic001:<password>@cluster0.bdn15bk.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0
 
+require('dotenv').config();
 
-mongoose.connect("mongodb+srv://aishlunatic001:KrishnaRadha@cluster0.bdn15bk.mongodb.net/Paytm")
+mongoose.connect(process.env.MONGODB_CONNECTION_STRING)
   .then(() => {
     console.log("Connected to MongoDB");
   })
@@ -20,7 +20,7 @@ const userSchema =  new mongoose.Schema({
   }, 
   firstname : {
     type : String ,
-    required : true ,
+    required : true , 
     trim : true , 
   }, 
   lastname : {
