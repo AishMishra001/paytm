@@ -10,7 +10,7 @@ function UserSection() {
   useEffect(() => {
     async function fetchData() {
       try {
-        const response = await axios.get("http://localhost:3001/api/v1/user/bulk?filter="+filter);
+        const response = await axios.get("https://paytm-xfci.vercel.app/api/v1/user/bulk?filter="+filter);
         setUsers(response.data.user);
       } catch (error) {
         console.error('Error fetching users:', error);
