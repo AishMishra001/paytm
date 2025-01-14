@@ -12,12 +12,12 @@ function Dashboard() {
     const fetchUserData = async () => {
       try {
         const token = localStorage.getItem('token');
-        const userResponse = await axios.get("http://localhost:3001/api/v1/user", {
+        const userResponse = await axios.get("https://paytm-xfci.vercel.app/api/v1/user", {
           headers: {
             Authorization: `Bearer ${token}`
           }
         });
-        const balanceResponse = await axios.get("http://localhost:3001/api/v1/account/balance", {
+        const balanceResponse = await axios.get("https://paytm-xfci.vercel.app/api/v1/account/balance", {
           headers: {
             Authorization: `Bearer ${token}`
           }

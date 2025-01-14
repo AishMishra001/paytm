@@ -18,7 +18,7 @@ function SendMoney({ User, UserImage }) {
   const handleTransfer = async () => {
     setLoading(true);
     try {
-      await axios.post("http://localhost:3001/api/v1/account/transfer", {
+      await axios.post("https://paytm-xfci.vercel.app/api/v1/account/transfer", {
         to: id,
         amount: amount
       }, {
